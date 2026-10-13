@@ -27,5 +27,12 @@ app.use("/api/jobs", jobRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Alumni Connect API is running",
+    status: "success",
+  });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
