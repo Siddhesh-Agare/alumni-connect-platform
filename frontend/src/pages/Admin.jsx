@@ -138,7 +138,7 @@ export default function Admin() {
       <div className="mt-6 sm:mt-8">
         {tab === "alumni" && (
           <div className="space-y-4">
-            {pendingUsers.length === 0 && <EmptyState icon={UserCheck} title="No alumni waiting" text="New alumni registrations will appear here for approval[cite: 1]." />}
+            {pendingUsers.length === 0 && <EmptyState icon={UserCheck} title="No alumni waiting" text="New alumni registrations will appear here for approval." />}
             {pendingUsers.map((u) => (
               <Row key={u._id}>
                 <div className="flex items-center gap-3.5 min-w-0">
@@ -159,7 +159,7 @@ export default function Admin() {
 
         {tab === "company" && (
           <div className="space-y-4">
-            {companyReqs.length === 0 && <EmptyState icon={Building2} title="No company requests" text="When a student claims a company, it shows up here to verify[cite: 1]." />}
+            {companyReqs.length === 0 && <EmptyState icon={Building2} title="No company requests" text="When a student claims a company, it shows up here to verify." />}
             {companyReqs.map((u) => (
               <Row key={u._id}>
                 <div className="flex items-start gap-3.5 min-w-0">
@@ -185,7 +185,7 @@ export default function Admin() {
           <>
             <Pills value={jobFilter} onChange={setJobFilter} options={[["pending", "Pending"], ["approved", "Approved"], ["rejected", "Rejected"], ["", "All"]]} />
             <div className="space-y-4">
-              {jobs.length === 0 && <EmptyState icon={Briefcase} title="No jobs here" text="Nothing matches this filter[cite: 1]." />}
+              {jobs.length === 0 && <EmptyState icon={Briefcase} title="No jobs here" text="Nothing matches this filter." />}
               {jobs.map((j) => (
                 <Row key={j._id}>
                   <div className="flex items-start gap-3.5 min-w-0 flex-1">
@@ -242,7 +242,7 @@ export default function Admin() {
                             <div className="flex items-center gap-1.5">
                               {u.status !== "approved" && <button className={`${btn("primary", "sm")} rounded-xl`} onClick={() => act(() => api.put(`/admin/users/${u._id}/approve`))}>Approve</button>}
                               <button aria-label="Edit user" className={`${btn("ghost", "sm")} rounded-xl text-slate-600`} onClick={() => setEditing(u)}><Pencil size={14} /></button>
-                              <button aria-label="Delete user" className={`${btn("danger", "sm")} rounded-xl`} onClick={() => window.confirm(`Delete ${u.name}? Their jobs, connections and chats will also be deleted[cite: 1].`) && act(() => api.delete(`/admin/users/${u._id}`))}><Trash2 size={14} /></button>
+                              <button aria-label="Delete user" className={`${btn("danger", "sm")} rounded-xl`} onClick={() => window.confirm(`Delete ${u.name}? Their jobs, connections and chats will also be deleted.`) && act(() => api.delete(`/admin/users/${u._id}`))}><Trash2 size={14} /></button>
                             </div>
                           )}
                         </td>
@@ -251,7 +251,7 @@ export default function Admin() {
                   </tbody>
                 </table>
               </div>
-              {users.length === 0 && <p className="p-8 text-center text-slate-500">No users found[cite: 1].</p>}
+              {users.length === 0 && <p className="p-8 text-center text-slate-500">No users found.</p>}
             </div>
           </>
         )}
