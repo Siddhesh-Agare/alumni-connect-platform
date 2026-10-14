@@ -1,6 +1,6 @@
 # Alumni Connect 🎓
 
-A modern, secure, and fully verified **MERN stack** web application built to connect students and alumni within an educational community. Designed with a sleek Tailwind CSS UI, robust Zod validation, and strict role-based verification workflows.
+A modern, secure, and fully verified **MERN stack** web application built to connect students and alumni within an educational community. Designed with a sleek Tailwind CSS UI, and strict role-based verification workflows.
 
 ---
 
@@ -15,9 +15,6 @@ A modern, secure, and fully verified **MERN stack** web application built to con
 - **Verified Job Board**
   Alumni can post opportunities that start as *pending* and only become visible to students after admin verification.
 
-- **Strict Validation & Protection**
-  Built-in prevention against NoSQL injection, field stripping for privileged properties (like `role: "admin"` or `status: "approved"`), and robust client/server-side validation.
-
 ---
 
 ## 🚀 Tech Stack
@@ -27,7 +24,6 @@ A modern, secure, and fully verified **MERN stack** web application built to con
 | Frontend       | React, React Router, Tailwind CSS, Lucide Icons, React Hot Toast |
 | Backend        | Node.js, Express.js                                             |
 | Database       | MongoDB & Mongoose                                              |
-| Validation     | Zod (cross-validated on both client and server)                 |
 | Authentication | JSON Web Tokens (JWT)                                           |
 
 ---
@@ -216,8 +212,3 @@ Contributions are welcome!
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Open a Pull Request
 
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
