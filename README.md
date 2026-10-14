@@ -1,4 +1,4 @@
-# Alumni Connect 🎓
+# Alumni Connect Platform 🎓
 
 A modern, secure, and fully verified **MERN stack** web application built to connect students and alumni within an educational community. Designed with a sleek Tailwind CSS UI, and strict role-based verification workflows.
 
