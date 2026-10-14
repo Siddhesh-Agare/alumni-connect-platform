@@ -1,81 +1,223 @@
-# Alumni Connect (MERN)
+# Alumni Connect 🎓
 
-Student–Alumni networking platform. Backend: Node, Express, MongoDB (MVC). Frontend: React + Vite.
+A modern, secure, and fully verified **MERN stack** web application built to connect students and alumni within an educational community. Designed with a sleek Tailwind CSS UI, robust Zod validation, and strict role-based verification workflows.
 
-## Run it
+---
 
-**1. Backend**
+## 🌟 Key Features
+
+- **Verified Community Security**
+  Alumni require manual admin approval before they can log in. Students cannot manually type company names; they submit a verification claim with a proof link for admin approval.
+
+- **Smart Networking**
+  Send connection requests, grow your professional network, and chat securely. Removing a connection automatically and permanently erases the chat history.
+
+- **Verified Job Board**
+  Alumni can post opportunities that start as *pending* and only become visible to students after admin verification.
+
+- **Strict Validation & Protection**
+  Built-in prevention against NoSQL injection, field stripping for privileged properties (like `role: "admin"` or `status: "approved"`), and robust client/server-side validation.
+
+---
+
+## 🚀 Tech Stack
+
+| Layer          | Technologies                                                    |
+| -------------- | --------------------------------------------------------------- |
+| Frontend       | React, React Router, Tailwind CSS, Lucide Icons, React Hot Toast |
+| Backend        | Node.js, Express.js                                             |
+| Database       | MongoDB & Mongoose                                              |
+| Validation     | Zod (cross-validated on both client and server)                 |
+| Authentication | JSON Web Tokens (JWT)                                           |
+
+---
+
+## 📁 Folder Structure
+
+```plaintext
+backend/
+  config/db.js              # MongoDB connection
+  models/                   # User, Connection, Message, Job models
+  controllers/              # Business logic handlers
+  routes/                   # URL to controller mapping
+  middleware/               # JWT protect, role authorize, validate (Zod), error handler
+  validators/               # Zod schemas per module (auth, user, job, message, common)
+  tests/                    # Validation test suite (npm test)
+  utils/                    # AsyncHandler, token generator, admin seeder
+  server.js                 # Entry point
+
+frontend/src/
+  services/api.js           # Centralized Axios instance with JWT interceptor & 401 handling
+  context/AuthContext.jsx   # Global logged-in user state management
+  components/               # Reusable UI components (Navbar, Avatar, Modal, ListEditor, EmptyState, Field, etc.)
+  pages/                    # Core views: Landing, Login, Register, Dashboard, Profile, ProfileView,
+                            #   Directory, Connections, Chat, Jobs, Admin
+  utils/validators.js       # Client-side rules mirroring backend Zod schemas
+  ui.js                     # Shared Tailwind class strings (buttons, cards, inputs)
+```
+
+---
+
+## 🛡️ Trust & Verification Rules
+
+1. **Alumni Approvals:** New alumni registrations remain pending until reviewed and approved by an administrator.
+2. **Student Companies:** Students must submit a company verification request containing the company name, title, and proof link (e.g., offer letter or ID). Verified companies display a green verification checkmark.
+3. **Job Verification:** Job posts are created as pending. Only admin-approved jobs are broadcast to students and tallied on the dashboard.
+4. **Privacy & Messaging:** Public user profiles omit email addresses for security. Deleting a connection instantly purges the corresponding private chat logs.
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- [MongoDB](https://www.mongodb.com/) (local instance or MongoDB Atlas)
+- npm
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd alumni-connect
+```
+
+### 2. Set up the backend
+
 ```bash
 cd backend
 npm install
-# edit .env (Mongo URI, JWT secret, admin credentials)
-npm run seed:admin     # creates the admin account once
-npm run dev            # http://localhost:5000
 ```
 
-**2. Frontend**
+Create a `.env` file in the `backend/` folder:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_strong_secret_key
+JWT_EXPIRES_IN=7d
+CLIENT_URL=http://localhost:5173
+
+# Admin seeder (optional)
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=change_this_password
+```
+
+> Adjust variable names to match your `config/` and `utils/` files.
+
+Start the server:
+
+```bash
+npm run dev     # development
+npm start       # production
+```
+
+### 3. Set up the frontend
+
 ```bash
 cd frontend
 npm install
-npm run dev            # http://localhost:5173
 ```
 
-Log in as the admin using ADMIN_EMAIL / ADMIN_PASSWORD from `backend/.env`.
+Create a `.env` file in the `frontend/` folder:
 
-## Folder structure
-```
-backend/
-  config/db.js              MongoDB connection
-  models/                   User, Connection, Message, Job
-  controllers/              business logic
-  routes/                   URL -> controller mapping
-  middleware/               JWT protect, role authorize, validate (Zod), error handler
-  validators/               Zod schemas per module (auth, user, job, message, common)
-  tests/                    validation tests  ->  npm test
-  utils/                    asyncHandler, token generator, admin seeder
-  server.js
-frontend/src/
-  services/api.js           the one axios instance (adds the JWT, handles 401). Components import it and call the API directly
-  context/AuthContext.jsx   logged-in user state
-  components/               Navbar, Avatar, Modal, ListEditor, EmptyState, ...
-  pages/                    Landing, Login, Register, Dashboard, Profile,
-                            ProfileView, Directory, Connections, Chat, Jobs, Admin
-  components/Field.jsx      input + inline error message
-  utils/validators.js       client-side rules that mirror the backend
-  ui.js                     shared Tailwind class strings (btn, card, input...)
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
 
-## Trust and verification rules
-- **Alumni** need admin approval before they can log in.
-- **Student company:** students cannot type a company name. They send a *company request* (company, title, proof link) and an admin verifies it. Verified companies show a green tick.
-- **Job posts** are created as `pending`. Only admin-approved jobs are visible to others and counted on the dashboard. The poster sees their own pending/rejected jobs.
-- **Remove connection** also permanently deletes the chat between the two users.
-- **Public profiles** never expose email addresses.
+Start the app:
 
-## Validation
-Every route runs `validate({ params, query, body })` **before** its controller. Invalid requests get
-`400 { message, errors: [{ field, message }] }`, and the React forms show those messages under the right field.
+```bash
+npm run dev
+```
 
-| Area | Rules |
-|---|---|
-| Register | name 2-60 letters; valid email; password 8-64 with a letter and a number; role is student/alumni only; graduation year 1950 to current year + 6 |
-| Login | valid email, password present (objects like `{"$gt":""}` are rejected, so no NoSQL injection) |
-| Profile | LinkedIn must be a linkedin.com https link; bio <= 1500; headline <= 120; max 30 skills (deduplicated); max 20 internships/experience/achievements; company + role required per row; blank rows dropped; achievement year is 4 digits |
-| Company request | company and title 2-100; proof must be http(s); one pending request at a time; already verified company is rejected |
-| Jobs | title 3-100; company 2-100; description 20-3000; type from fixed list; apply link http(s); max 5 pending jobs per alumnus |
-| Messages | 1-1000 characters, connected users only |
-| IDs / filters | every `:id` must be a valid ObjectId; `status` / `role` / `search` query params are checked |
-| Business rules | admin accounts cannot be approved, rejected, edited or deleted; only *pending* company requests can be decided; no-op status changes are refused |
-| Server | JSON body limit 100kb; bad JSON, duplicate-key and cast errors return clear 400/409 responses |
+### 4. Run tests
 
-Unknown fields are stripped, so a user cannot send `role: "admin"` or `status: "approved"` in a request.
+The backend includes a validation test suite:
 
-## API summary
-| Module | Endpoints |
-|---|---|
-| Auth | POST /api/auth/register, POST /api/auth/login, GET /api/auth/me |
-| Profile | PUT /api/users/profile, POST /api/users/company-request (student), GET /api/users, GET /api/users/:id |
-| Connections | GET /api/connections, POST /request/:userId, PUT /:id/accept, PUT /:id/reject, DELETE /:id (also deletes chat) |
-| Messages | GET/POST /api/messages/:userId |
-| Jobs | GET /api/jobs, GET /api/jobs/count, POST /api/jobs (alumni, pending), DELETE /api/jobs/:id |
-| Admin | users, approve/reject users, edit/delete users, company-requests (approve/reject), jobs (approve/reject), stats |
+```bash
+cd backend
+npm test
+```
+
+---
+
+## 🔌 API Summary
+
+### Auth
+
+| Method | Endpoint             | Description                       |
+| ------ | -------------------- | --------------------------------- |
+| POST   | `/api/auth/register` | Register a new user               |
+| POST   | `/api/auth/login`    | Log in and create a session       |
+| GET    | `/api/auth/me`       | Retrieve the current user session |
+
+### Profile
+
+| Method | Endpoint                         | Description                              |
+| ------ | -------------------------------- | ---------------------------------------- |
+| PUT    | `/api/users/profile`             | Update your profile                      |
+| POST   | `/api/users/company-request`     | Submit a student company verification claim |
+| GET    | `/api/users`                     | Directory search                         |
+| GET    | `/api/users/:id`                 | View a public profile                    |
+
+### Connections
+
+| Method | Endpoint                          | Description                                   |
+| ------ | --------------------------------- | --------------------------------------------- |
+| GET    | `/api/connections`                | List your connections and requests            |
+| POST   | `/api/connections/request/:userId`| Send a connection request                     |
+| PUT    | `/api/connections/:id/accept`     | Accept a request                              |
+| PUT    | `/api/connections/:id/reject`     | Reject a request                              |
+| DELETE | `/api/connections/:id`            | Remove a connection (also purges chat history)|
+
+### Messages
+
+| Method | Endpoint                  | Description                                  |
+| ------ | ------------------------- | -------------------------------------------- |
+| GET    | `/api/messages/:userId`   | Retrieve chat history with a connected user  |
+| POST   | `/api/messages/:userId`   | Send a message to a connected user           |
+
+### Jobs
+
+| Method | Endpoint           | Description                      |
+| ------ | ------------------ | -------------------------------- |
+| GET    | `/api/jobs`        | List verified job postings       |
+| GET    | `/api/jobs/count`  | Get the job count                |
+| POST   | `/api/jobs`        | Submit a job (alumni only)       |
+| DELETE | `/api/jobs/:id`    | Delete a job post                |
+
+### Admin
+
+| Endpoint        | Description                                                                                          |
+| --------------- | ---------------------------------------------------------------------------------------------------- |
+| `/api/admin/...`| User approvals, user edits/deletions, company requests, job verifications, and platform analytics    |
+
+---
+
+## 🔐 Security Highlights
+
+- JWT-based authentication with a centralized 401 handler on the client
+- Role-based authorization middleware (`student`, `alumni`, `admin`)
+- Zod schemas validating every request on the server, mirrored on the client
+- Protection against NoSQL injection
+- Privileged fields (`role`, `status`, etc.) stripped from user-submitted payloads
+- Email addresses hidden from public profiles
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m "Add your feature"`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
